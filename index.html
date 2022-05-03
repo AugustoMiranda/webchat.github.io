@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="pt-br">
+
+<head>
+    <title>WebChat</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    </style>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body>
+    <!-- Div com o formulário de acesso, para inserir o apelido -->
+    <div class="container">
+        <div class="row">
+            <div class="col-25">
+                <div id="acesso_usuario">
+                    <form action="#" id="login">
+                        <input type="text" placeholder="Nome" name="apelido" id="apelido">
+                        <input type="submit" value="&#9757;">
+                    </form>
+                </div>
+                <!-- Div principal onde fica o painel de mensagens e lista de usuários -->
+                <div id="sala_chat">
+                    <div id="historico_mensagens"></div>
+                    <select multiple="multiple" name="" id="lista_usuarios">
+                        <option value="">Online</option>
+                    </select>
+                    <form action="#" id="chat">
+                        <input type="text" id="texto_mensagem" name="texto_mensagem">
+                        <input type="submit" id="button_submit" value="&#9758;">
+                    </form>
+                </div>
+
+            </div>
+            <div class="col-75"></div>
+        </div>
+    </div>
+    <!-- Optional JavaScript -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io.connect();
+
+        //Ao enviar uma mensagens
+        $("form#chat").submit(function (e) {
+            e.preventDefault();
+
+            var mensagem = $(this).find("#texto_mensagem").val();
+            var usuario = $("#lista_usuarios").val(); // Usuário selecionado na lista lateral direita
+
+            // Evento acionado no servidor para o envio da mensagem
+            // junto com o nome do usuário selecionado da lista
+            socket.emit("enviar mensagem", { msg: mensagem, usu: usuario }, function () {
+                $("form#chat #texto_mensagem").val("");
+            });
+        });
+
+        // Resposta ao envio de mensagens do servidor
+        socket.on("atualizar mensagens", function (dados) {
+            var mensagem_formatada = $("<p />").text(dados.msg).addClass(dados.tipo);
+            $("#historico_mensagens").append(mensagem_formatada);
+        });
+
+        $("form#login").submit(function (e) {
+            e.preventDefault();
+
+            // Evento enviado quando o usuário insere um apelido
+            socket.emit("entrar", $(this).find("#apelido").val(), function (valido) {
+                if (valido) {
+                    // Caso não exista nenhum usuário com o mesmo nome, o painel principal é exibido
+                    $("#acesso_usuario").hide();
+                    $("#sala_chat").show();
+                } else {
+                    // Do contrário o campo de mensagens é limpo e é apresentado um alert
+                    $("#acesso_usuario").val("");
+                    alert("Nome já utilizado na sala!");
+                }
+            });
+        });
+
+        // Quando servidor enviar uma nova lista de usuários
+		// o select é limpo e reinserida a opção Todos
+		// junto de toda a lista de usuários.
+        socket.on("atualizar usuarios", function(usuarios){
+			$("#lista_usuarios").empty();
+			$("#lista_usuarios").append("<option value=''>Online&#10139;</option>");
+				$.each(usuarios, function(indice){
+					var opcao_usuario = $("<option />").text(usuarios[indice]);
+					$("#lista_usuarios").append(opcao_usuario);
+			});
+		});
+    </script>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

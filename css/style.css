@@ -1,0 +1,112 @@
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #fff;
+    padding: 10px;
+}
+
+#apelido {
+    color: #aeaeae;
+    font-weight: bold;
+}
+
+#sala_chat {
+    display: none;
+    color: #ff2800;
+}
+
+#acesso_usuario {
+    color: #aeaeae;
+    height: 30px;
+    left: 50%;
+    margin-left: -160px;
+    margin-top: -15px;
+    position: fixed;
+    top: 50%;
+    width: 320px;
+}
+
+#acesso_usuario form {
+    margin: 0;
+}
+
+form {
+    margin: 15px 0;
+}
+
+form input[type='text'] {
+    border: 2px solid #aeaeae;
+    border-radius: 5px;
+    padding: 5px;
+    width: 75%;
+}
+
+form input[type='submit'] {
+    background: #aeaeae;
+    border: none;
+    border-radius: 5px;
+    color: #FFF;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 7px 5px;
+    width: 19%;
+}
+
+#historico_mensagens,
+#lista_usuarios {
+    background: #fff;
+    border: 2px solid #aeaeae;
+    height: 550px;
+    float: left;
+    margin-bottom: 10px;
+    width: 75%;
+}
+
+#historico_mensagens {
+    border-right: 0;
+}
+
+#lista_usuarios {
+    border-left: 1px solid #aeaeae;
+    height: 550px;
+    width: 25%;
+}
+
+@media screen and (min-width: 320px) and (max-width: 480px) {
+    .col-25 {
+        width: 100%;
+        padding: 0;
+    }
+}
+
+@media screen and (min-width: 481px) and (max-width: 768px) {
+    .col-25 {
+        width: 100%;
+        padding: 0;
+    }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1279px) {
+    .col-25 {
+        width: 100%;
+        padding: 0;
+    }
+}
+
+@media screen and (min-width: 1279px) {
+    .col-25 {
+        width: 100%;
+        padding: 0;
+    }
+}
